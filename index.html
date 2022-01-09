@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <button id='Quick Sort'>Quick Sort</button>
-    <button id='Selection Sort'>Selection Sort</button>
-    <button id='Bubble Sort'>Bubble Sort</button>
-    <button id='Merge Sort'>Merge Sort</button>
-    <button id='Know Sort'>Know Sort</button>
-    <button id='Know Sort 2'>Know Sort 2</button>
-    <button id='Cool Sort'>Cool Sort</button>
-
+    <button id='Quick Sort' style="margin-left: 75px; margin-right:100px;">Insertion Sort</button>
+    <button id='Selection Sort' style="margin-right:100px;">Selection Sort</button>
+    <button id='Bubble Sort' style="margin-right:100px;">Bubble Sort</button>
+    <button id='Merge Sort' style="margin-right:100px;">Merge Sort</button>
+    <button id='Know Sort' style="margin-right:100px;">Know Sort</button>
+    <button id='Know Sort 2' style="margin-right:100px;">Know Sort 2</button>
+    <button id='Cool Sort' style="margin-right:100px;">Cool Sort</button>
+    <br>
+    <br>
     <div></div>
-    Array: <span id="arr"></span>
     <canvas id="myCanvas" width="1400" height="650" style="border:1px solid #2a1baf;"></canvas>
 
     <input type="range" min="4" max="2000" value="1" class="slider" id="slider">
@@ -22,7 +22,6 @@
     <br>
     <button id='New'>Generate New Array</button>
     <button id="Stop">Pause</button>
-    <button id="Resume">Resume</button>
 
     <script>
         var mode = "None";
@@ -34,7 +33,6 @@
         var slideSpeed = document.getElementById("slideSpeed");
         var slideText = document.getElementById("choice");
         var speedText = document.getElementById("speed");
-        var arrText = document.getElementById("arr");
         var await = 0;
         var await2 = 0;
         var size = 4;
@@ -47,8 +45,6 @@
         var iterated = [];
         var buttonGen = document.getElementById('New');
         var buttonStop = document.getElementById('Stop');
-        var buttonResume = document.getElementById('Resume');
-        arrText.innerHTML = arr.slice(0, 35);
         var buttonQuick = document.getElementById('Quick Sort');
         var buttonBubble = document.getElementById('Bubble Sort');
         var buttonMerge = document.getElementById('Merge Sort');
@@ -58,6 +54,7 @@
         var buttonSelection = document.getElementById('Selection Sort');
 
         buttonGen.onclick = function() {
+            minIndex = -1;
             lastMode = mode;
             mode = "None";
             arr = reset(arr.length);
@@ -72,6 +69,7 @@
             lastMode = mode;
             mode = "None";      
         }
+        /*
         buttonResume.onclick = function() {
             if (lastMode != "None") {
                 mode = lastMode;
@@ -108,7 +106,9 @@
                 coolSort();
             }
         }
+        */
         buttonQuick.onclick = function() {
+            minIndex = -1;
             if (mode != "Quick") {
                 lastMode = mode;
                 mode = "Quick";
@@ -116,6 +116,7 @@
             }
         }
         buttonBubble.onclick = function() {
+            minIndex = -1;
             if (mode != "Bubble") {
                 lastMode = mode;
                 mode = "Bubble";
@@ -123,6 +124,7 @@
             }
         }
         buttonSelection.onclick = function() {
+            minIndex = -1;
             if (mode != "Select") {
                 lastMode = mode;
                 mode = "Select";
@@ -130,6 +132,7 @@
             }
         }
         buttonMerge.onclick = function() {
+            minIndex = -1;
             if (mode != "Merge") {
                 lastMode = mode;
                 mode = "Merge";
@@ -143,6 +146,7 @@
             }
         }
         buttonKnow.onclick = function() {
+            minIndex = -1;
             if (mode != "Know") {
                 lastMode = mode;
                 mode = "Know";
@@ -150,6 +154,7 @@
             }
         }
         buttonKnow2.onclick = function() {
+            minIndex = -1;
             if (mode != "Know2") {
                 lastMode = mode;
                 mode = "Know2";
@@ -157,6 +162,7 @@
             }
         }
         buttonCool.onclick = function() {
+            minIndex = -1;
             if (mode != "Cool") {
                 lastMode = mode;
                 mode = "Cool";
@@ -164,13 +170,13 @@
             }
         }
         slider.oninput = function() {
+            minIndex = -1;
             lastMode = mode;
             mode = "None";
             slideText.innerHTML = this.value;
             size = this.value;
             ctx.clearRect(0, 0, c.width, c.height);
             arr = reset(size);
-            arrText.innerHTML = arr.slice(0, 35);
         }
         slideSpeed.oninput = function() {
             speedText.innerHTML = this.value;
@@ -204,7 +210,6 @@
                 }
                 ctx.fillRect(i * (1400 / size), 0, 1400 / size, 600 / (size) * ar[i]);
             }
-            arrText.innerHTML = ar.slice(0, 35);
             return ar;
         }
         async function bin_search(arr, val, start, end) {
@@ -260,7 +265,6 @@
                 arr = arr.concat(slice2);
                 arr = arr.concat(slice3);
                 reset(arr.length, arr);
-                arrText.innerHTML = arr.slice(0, 35);
                 i++;
             }
             lastMode = mode;
@@ -313,7 +317,6 @@
                     if (arr[j] > arr[j + 1]) {
                         await swap(j, j + 1);
                         reset(arr.length, arr);
-                        arrText.innerHTML = arr.slice(0, 35);
                         sorted = false;
                     }
                     if (mode != "Bubble") {
@@ -351,7 +354,6 @@
                 }
                 await swap(i, minIndex);
                 reset(arr.length, arr);
-                arrText.innerHTML = arr.slice(0, 35);
             }
             lastMode = mode;
             mode = "None";
@@ -429,9 +431,6 @@
                     await merge(start, end);
                     reset(arr.length, arr);
                 }
-                lastMode = mode;
-                mode = "None";
-                active = -1;
             }
         }
 
