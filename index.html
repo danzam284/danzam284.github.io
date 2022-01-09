@@ -5,6 +5,7 @@
     <button id='Selection Sort'>Selection Sort</button>
     <button id='Bubble Sort'>Bubble Sort</button>
     <button id='Merge Sort'>Merge Sort</button>
+    <button id='Shell Sort'>Shell Sort</button>
     <button id='Cocktail Sort'>Cocktail Sort</button>
     <button id='Gnome Sort'>Insertion Sort</button>
     <button id='Know Sort' style="margin-left:300px;">Know Sort</button>
@@ -50,6 +51,7 @@
         var buttonQuick = document.getElementById('Quick Sort');
         var buttonBubble = document.getElementById('Bubble Sort');
         var buttonMerge = document.getElementById('Merge Sort');
+        var buttonShell = document.getElementById('Shell Sort');
         var buttonCocktail = document.getElementById('Cocktail Sort');
         var buttonGnome = document.getElementById('Gnome Sort');
         var buttonKnow = document.getElementById('Know Sort');
@@ -149,6 +151,14 @@
                 mergesort(0, arr.length - 1);
             }
         }
+        buttonShell.onclick = function() {
+            minIndex = -1;
+            if (mode != "Shell") {
+                lastMode = mode;
+                mode = "Shell";
+                shellsort();
+            }
+        }
         buttonCocktail.onclick = function() {
             minIndex = -1;
             if (mode != "Cocktail") {
@@ -202,6 +212,44 @@
             speedText.innerHTML = this.value;
             speed = this.value;
         }
+
+        async function shellsort() {
+            for (let i = Math.floor(arr.length / 2); i > 0; i = Math.floor(i / 2)) {
+                if (mode != "Shell") {
+                    break;
+                }
+                for (let j = i; j < arr.length; j++) {
+                    if (mode != "Shell") {
+                        break;
+                    }
+                    active = j;
+                    let temp = arr[j];
+                    let k;
+                    for (k = j; k >= i && arr[k - i] > temp; k -= i) {
+                        if (mode != "Shell") {
+                            break;
+                        }
+                        active = k;
+                        if (speed == 1) {
+                            await sleep(500);
+                        }
+                        else if (speed == 2) {
+                            await sleep(100);
+                        }
+                        else if (speed == 3) {
+                            await sleep(20);
+                        }
+                        else if (speed == 4) {
+                            await sleep();
+                        }
+                        arr[k] = arr[k - i];
+                        reset(arr.length, arr);
+                    }
+                    arr[k] = temp;
+                    reset(arr.length, arr);
+                }
+            }
+        }
         function reset(size, ar = []) {
             nums = [];
             slide = false;
@@ -233,6 +281,8 @@
             return ar;
         }
         async function bin_search(arr, val, start, end) {
+            active = start;
+            reset(arr.length, arr);
             while (mode == "Quick") {
                 if (speed == 1) {
                     await sleep(500);
