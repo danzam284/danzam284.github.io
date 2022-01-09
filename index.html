@@ -19,7 +19,9 @@
     <div></div>
     <br>
     <button id='New'>Generate New Array</button>
-    <button id="Stop">Stop</button>
+    <button id="Stop">Pause</button>
+    <button id="Resume">Resume</button>
+
     <script>
         var mode = "None";
         var lastMode = "None";
@@ -39,6 +41,7 @@
         var iterated = [];
         var buttonGen = document.getElementById('New');
         var buttonStop = document.getElementById('Stop');
+        var buttonResume = document.getElementById('Resume');
         arrText.innerHTML = arr;
         var buttonQuick = document.getElementById('Quick Sort');
         var buttonBubble = document.getElementById('Bubble Sort');
@@ -46,21 +49,50 @@
         var buttonKnow = document.getElementById('Know Sort');
         var buttonKnow2 = document.getElementById('Know Sort 2');
         buttonGen.onclick = function() {
+            lastMode = mode;
             mode = "None";
             arr = reset(arr.length);
         }
         buttonStop.onclick = function() {
+            lastMode = mode;
             mode = "None";        
         }
+        buttonResume.onclick = function() {
+            mode = lastMode;
+            if (mode == "Quick") {
+                quicksort();
+            }
+            else if (mode == "Bubble") {
+                bubblesort();
+            }
+            else if (mode == "Merge") {
+                visited = [];
+                iterated = [];
+                for (let i = 0; i < arr.length; i++) {
+                    iterated.push(0);
+                    visited.push(0);
+                }
+                mergesort(0, arr.length - 1);
+            }
+            else if (mode == "Know") {
+                knowSort();
+            }
+            else if (mode == "Know2") {
+                knowSort2();
+            }
+        }
         buttonQuick.onclick = function() {
+            lastMode = mode;
             mode = "Quick";
             quicksort();
         }
         buttonBubble.onclick = function() {
+            lastMode = mode;
             mode = "Bubble";
             bubblesort();
         }
         buttonMerge.onclick = function() {
+            lastMode = mode;
             mode = "Merge";
             visited = [];
             iterated = [];
@@ -71,14 +103,17 @@
             mergesort(0, arr.length - 1);
         }
         buttonKnow.onclick = function() {
+            lastMode = mode;
             mode = "Know";
             knowSort();
         }
         buttonKnow2.onclick = function() {
+            lastMode = mode;
             mode = "Know2";
             knowSort2();
         }
         slider.oninput = function() {
+            lastMode = mode;
             mode = "None";
             slideText.innerHTML = this.value;
             size = this.value;
