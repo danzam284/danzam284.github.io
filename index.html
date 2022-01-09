@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <button id='Quick Sort' style="margin-left: 75px; margin-right:100px;">Quick Sort</button>
-    <button id='Selection Sort' style="margin-right:100px;">Selection Sort</button>
-    <button id='Bubble Sort' style="margin-right:100px;">Bubble Sort</button>
-    <button id='Merge Sort' style="margin-right:100px;">Merge Sort</button>
-    <button id='Cocktail Sort' style="margin-right:100px;">Cocktail Sort</button>
-    <button id='Know Sort' style="margin-right:100px;">Know Sort</button>
-    <button id='Know Sort 2' style="margin-right:100px;">Know Sort 2</button>
-    <button id='Cool Sort' style="margin-right:100px;">Cool Sort</button>
+    <button id='Quick Sort'>Quick Sort</button>
+    <button id='Selection Sort'>Selection Sort</button>
+    <button id='Bubble Sort'>Bubble Sort</button>
+    <button id='Merge Sort'>Merge Sort</button>
+    <button id='Cocktail Sort'>Cocktail Sort</button>
+    <button id='Gnome Sort'>Insertion Sort</button>
+    <button id='Know Sort' style="margin-left:300px;">Know Sort</button>
+    <button id='Know Sort 2'>Know Sort 2</button>
+    <button id='Cool Sort'>Cool Sort</button>
     <br>
     <br>
     <div></div>
@@ -50,6 +51,7 @@
         var buttonBubble = document.getElementById('Bubble Sort');
         var buttonMerge = document.getElementById('Merge Sort');
         var buttonCocktail = document.getElementById('Cocktail Sort');
+        var buttonGnome = document.getElementById('Gnome Sort');
         var buttonKnow = document.getElementById('Know Sort');
         var buttonKnow2 = document.getElementById('Know Sort 2');
         var buttonCool = document.getElementById('Cool Sort');
@@ -153,6 +155,14 @@
                 lastMode = mode;
                 mode = "Cocktail";
                 cocktailsort();
+            }
+        }
+        buttonGnome.onclick = function() {
+            minIndex = -1;
+            if (mode != "Gnome") {
+                lastMode = mode;
+                mode = "Gnome";
+                gnomesort();
             }
         }
         buttonKnow.onclick = function() {
@@ -479,6 +489,18 @@
             lastMode = mode;
             mode = "None";
             active = -1;
+        }
+
+        async function gnomesort() {
+            for (var i = 0; i < arr.length; i++) {
+                for (var j = i; j > 0; j--) {
+                    active = j;
+                    if (arr[j] < arr[j - 1]) {
+                        await swap(j, j - 1);
+                        reset(arr.length, arr);
+                    }
+                }
+            }
         }
 
         function isSorted() {
