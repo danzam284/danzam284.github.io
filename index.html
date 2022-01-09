@@ -2,6 +2,7 @@
 <html>
 <body>
     <button id='Quick Sort'>Quick Sort</button>
+    <button id='Selection Sort'>Selection Sort</button>
     <button id='Bubble Sort'>Bubble Sort</button>
     <button id='Merge Sort'>Merge Sort</button>
     <button id='Know Sort'>Know Sort</button>
@@ -35,8 +36,10 @@
         var speedText = document.getElementById("speed");
         var arrText = document.getElementById("arr");
         var await = 0;
+        var await2 = 0;
         var size = 4;
         var speed = 1;
+        var minIndex = -1;
         slideText.innerHTML = size;
         speedText.innerHTML = speed;
         var arr = reset(size ,[]);
@@ -52,6 +55,7 @@
         var buttonKnow = document.getElementById('Know Sort');
         var buttonKnow2 = document.getElementById('Know Sort 2');
         var buttonCool = document.getElementById('Cool Sort');
+        var buttonSelection = document.getElementById('Selection Sort');
 
         buttonGen.onclick = function() {
             lastMode = mode;
@@ -62,16 +66,26 @@
             if (mode == "Cool") {
                 await = 1;
             }
+            if (mode == "Select") {
+                await2 = 1;
+            }
             lastMode = mode;
             mode = "None";      
         }
         buttonResume.onclick = function() {
-            mode = lastMode;
+            if (lastMode != "None") {
+                mode = lastMode;
+            }
             if (mode == "Quick") {
                 quicksort();
             }
             else if (mode == "Bubble") {
                 bubblesort();
+            }
+            else if (await2 == 1) {
+                await2 = 0;
+                mode = "Select";
+                selectionsort();
             }
             else if (mode == "Merge") {
                 visited = [];
@@ -106,6 +120,13 @@
                 lastMode = mode;
                 mode = "Bubble";
                 bubblesort();
+            }
+        }
+        buttonSelection.onclick = function() {
+            if (mode != "Select") {
+                lastMode = mode;
+                mode = "Select";
+                selectionsort();
             }
         }
         buttonMerge.onclick = function() {
@@ -174,6 +195,9 @@
                 ctx.fillStyle = 'black';
                 if (i == active) {
                     ctx.fillStyle = 'blue';
+                }
+                else if (i == minIndex) {
+                    ctx.fillStyle = 'red';
                 }
                 else if (i == ar[i] - 1) {
                     ctx.fillStyle = 'green';
@@ -302,6 +326,32 @@
                 if (sorted) {
                     break;
                 }
+            }
+            lastMode = mode;
+            mode = "None";
+            active = -1;
+        }
+
+        async function selectionsort() {
+            for (let i = 0; i < arr.length; i++) {
+                if (mode != "Select") {
+                    break;
+                }
+                minIndex = i;
+                for (let j = i; j < arr.length; j++) {
+                    if (mode != "Select") {
+                        break;
+                    }
+                    active = j;
+                    if (arr[j] < arr[minIndex]) {
+                        minIndex = j;
+                    }
+                    await swap(1, 1);
+                    reset(arr.length, arr);
+                }
+                await swap(i, minIndex);
+                reset(arr.length, arr);
+                arrText.innerHTML = arr.slice(0, 35);
             }
             lastMode = mode;
             mode = "None";
