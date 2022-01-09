@@ -19,8 +19,10 @@
     <div></div>
     <br>
     <button id='New'>Generate New Array</button>
+    <button id="Stop">Stop</button>
     <script>
-        let mode = "None";
+        var mode = "None";
+        var lastMode = "None";
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         var slider = document.getElementById("slider");
@@ -36,6 +38,7 @@
         var visited = [];
         var iterated = [];
         var buttonGen = document.getElementById('New');
+        var buttonStop = document.getElementById('Stop');
         arrText.innerHTML = arr;
         var buttonQuick = document.getElementById('Quick Sort');
         var buttonBubble = document.getElementById('Bubble Sort');
@@ -45,6 +48,9 @@
         buttonGen.onclick = function() {
             mode = "None";
             arr = reset(arr.length);
+        }
+        buttonStop.onclick = function() {
+            mode = "None";        
         }
         buttonQuick.onclick = function() {
             mode = "Quick";
@@ -81,7 +87,6 @@
             arrText.innerHTML = arr;
         }
         slideSpeed.oninput = function() {
-            mode = "None";
             speedText.innerHTML = this.value;
             speed = this.value;
         }
@@ -111,43 +116,48 @@
             return ar;
         }
         async function bin_search(arr, val, start, end) {
-            if (speed == 1) {
-                await sleep(500);
-            }
-            else if (speed == 2) {
-                await sleep(100);
-            }
-            else if (speed == 3) {
-                await sleep(20);
-            }
-            else if (speed == 4) {
-                await sleep();
-            }
-            if (start == end) {
-                if (arr[start] > val) {
+            while (mode == "Quick") {
+                if (speed == 1) {
+                    await sleep(500);
+                }
+                else if (speed == 2) {
+                    await sleep(100);
+                }
+                else if (speed == 3) {
+                    await sleep(20);
+                }
+                else if (speed == 4) {
+                    await sleep();
+                }
+                if (start == end) {
+                    if (arr[start] > val) {
+                        return start;
+                    }
+                    else {
+                        return start + 1;
+                    }
+                }
+                if (start > end) {
                     return start;
                 }
-                else {
-                    return start + 1;
+                var mid = Math.floor((start + end) / 2);
+                if (arr[mid] < val) {
+                    return bin_search(arr, val, mid + 1, end);
                 }
-            }
-            if (start > end) {
-                return start;
-            }
-            var mid = Math.floor((start + end) / 2);
-            if (arr[mid] < val) {
-                return bin_search(arr, val, mid + 1, end);
-            }
-            else if (arr[mid] > val) {
-                return bin_search(arr, val, start, mid - 1);
-            }
-            else {
-                return mid;
+                else if (arr[mid] > val) {
+                    return bin_search(arr, val, start, mid - 1);
+                }
+                else {
+                    return mid;
+                }
             }
         }
         async function quicksort() {
             let i = 0;
             while (i < arr.length) {
+                if (mode != "Quick") {
+                    break;
+                }
                 let val = arr[i];
                 let j = await bin_search(arr, val, 0, i - 1);
                 let slice2 = arr.slice(j, i);
@@ -198,6 +208,7 @@
             arr[a] = arr[b];
             arr[b] = temp1;
         }
+
         async function bubblesort() {
             for (let i = 0; i < arr.length; i++) {
                 sorted = true;
@@ -208,6 +219,12 @@
                         arrText.innerHTML = arr;
                         sorted = false;
                     }
+                    if (mode != "Bubble") {
+                        break;
+                    }
+                }
+                if (mode != "Bubble") {
+                    break;
                 }
                 if (sorted) {
                     break;
@@ -223,6 +240,9 @@
             let endTwo = end;
             let index = start;
             while (startOne <= endOne && startTwo <= endTwo) {
+                if (mode != "Merge") {
+                    break;
+                }
                 if (arr[startOne] <= arr[startTwo]) {
                     iterated[index] = arr[startOne];
                     index++;
@@ -235,17 +255,26 @@
                 }
             }
             while (startOne <= endOne) {
+                if (mode != "Merge") {
+                    break;
+                }
                 iterated[index] = arr[startOne]
                 index++;
                 startOne++;
             }
             while (startTwo <= endTwo) {
+                if (mode != "Merge") {
+                    break;
+                }
                 iterated[index] = arr[startTwo];
                 index++;
                 startTwo++;
             }
             index = start
             while (index < end + 1) {
+                if (mode != "Merge") {
+                    break;
+                }
                 arr[index] = iterated[index];
                 if (speed == 1) {
                     await sleep(200);
@@ -265,20 +294,28 @@
         }
         
         async function mergesort(start, end) {
-            if (start < end) {
-                let mid = Math.floor((start + end) / 2);
-                await mergesort(start, mid);
-                await mergesort(mid + 1, end);
-                await merge(start, end);
-                reset(arr.length, arr);
+            if (mode == "Merge") {
+                if (start < end) {
+                    let mid = Math.floor((start + end) / 2);
+                    await mergesort(start, mid);
+                    await mergesort(mid + 1, end);
+                    await merge(start, end);
+                    reset(arr.length, arr);
+                }
             }
         }
 
         async function knowSort() {
             for (let i = 0; i < arr.length; i++) {
                 while (arr[i] != i + 1) {
+                    if (mode != "Know") {
+                        break;
+                    }
                     await swapKnow(i, arr[i] - 1);
                     reset(arr.length, arr);
+                }
+                if (mode != "Know") {
+                    break;
                 }
             }
         }
@@ -286,8 +323,14 @@
         async function knowSort2() {
             sorted = false;
   	        while (!sorted) {
+                if (mode != "Know2") {
+                    break;
+                }
       	        sorted = true;
       	        for (let i = 0; i < arr.length; i++) {
+                    if (mode != "Know2") {
+                        break;
+                    }
         	        if (arr[arr[i] - 1] > arr[i]) {
               	        sorted = false;
                     }
