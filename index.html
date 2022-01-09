@@ -25,6 +25,7 @@
     <script>
         var mode = "None";
         var lastMode = "None";
+        var active = -1;
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         var slider = document.getElementById("slider");
@@ -42,7 +43,7 @@
         var buttonGen = document.getElementById('New');
         var buttonStop = document.getElementById('Stop');
         var buttonResume = document.getElementById('Resume');
-        arrText.innerHTML = arr;
+        arrText.innerHTML = arr.slice(0, 35);
         var buttonQuick = document.getElementById('Quick Sort');
         var buttonBubble = document.getElementById('Bubble Sort');
         var buttonMerge = document.getElementById('Merge Sort');
@@ -82,35 +83,45 @@
             }
         }
         buttonQuick.onclick = function() {
-            lastMode = mode;
-            mode = "Quick";
-            quicksort();
+            if (mode != "Quick") {
+                lastMode = mode;
+                mode = "Quick";
+                quicksort();
+            }
         }
         buttonBubble.onclick = function() {
-            lastMode = mode;
-            mode = "Bubble";
-            bubblesort();
+            if (mode != "Bubble") {
+                lastMode = mode;
+                mode = "Bubble";
+                bubblesort();
+            }
         }
         buttonMerge.onclick = function() {
-            lastMode = mode;
-            mode = "Merge";
-            visited = [];
-            iterated = [];
-            for (let i = 0; i < arr.length; i++) {
-                iterated.push(0);
-                visited.push(0);
+            if (mode != "Merge") {
+                lastMode = mode;
+                mode = "Merge";
+                visited = [];
+                iterated = [];
+                for (let i = 0; i < arr.length; i++) {
+                    iterated.push(0);
+                    visited.push(0);
+                }
+                mergesort(0, arr.length - 1);
             }
-            mergesort(0, arr.length - 1);
         }
         buttonKnow.onclick = function() {
-            lastMode = mode;
-            mode = "Know";
-            knowSort();
+            if (mode != "Know") {
+                lastMode = mode;
+                mode = "Know";
+                knowSort();
+            }
         }
         buttonKnow2.onclick = function() {
-            lastMode = mode;
-            mode = "Know2";
-            knowSort2();
+            if (mode != "Know2") {
+                lastMode = mode;
+                mode = "Know2";
+                knowSort2();
+            }
         }
         slider.oninput = function() {
             lastMode = mode;
@@ -119,7 +130,7 @@
             size = this.value;
             ctx.clearRect(0, 0, c.width, c.height);
             arr = reset(size);
-            arrText.innerHTML = arr;
+            arrText.innerHTML = arr.slice(0, 35);
         }
         slideSpeed.oninput = function() {
             speedText.innerHTML = this.value;
@@ -142,12 +153,15 @@
             ctx.clearRect(0, 0, c.width, c.height);
             for (let i = 0; i < size; i++) {
                 ctx.fillStyle = 'black';
-                if (i == ar[i] - 1) {
+                if (i == active) {
+                    ctx.fillStyle = 'blue';
+                }
+                else if (i == ar[i] - 1) {
                     ctx.fillStyle = 'green';
                 }
                 ctx.fillRect(i * (1400 / size), 0, 1400 / size, 600 / (size) * ar[i]);
             }
-            arrText.innerHTML = ar;
+            arrText.innerHTML = ar.slice(0, 35);
             return ar;
         }
         async function bin_search(arr, val, start, end) {
@@ -190,6 +204,7 @@
         async function quicksort() {
             let i = 0;
             while (i < arr.length) {
+                active = i;
                 if (mode != "Quick") {
                     break;
                 }
@@ -202,9 +217,12 @@
                 arr = arr.concat(slice2);
                 arr = arr.concat(slice3);
                 reset(arr.length, arr);
-                arrText.innerHTML = arr;
+                arrText.innerHTML = arr.slice(0, 35);
                 i++;
             }
+            lastMode = mode;
+            mode = "None";
+            active = -1;
         }
         async function swap(a, b) {
             if (speed == 1) {
@@ -248,10 +266,11 @@
             for (let i = 0; i < arr.length; i++) {
                 sorted = true;
                 for (let j = 0; j < arr.length - i - 1; j++) {
+                    active = j;
                     if (arr[j] > arr[j + 1]) {
                         await swap(j, j + 1);
                         reset(arr.length, arr);
-                        arrText.innerHTML = arr;
+                        arrText.innerHTML = arr.slice(0, 35);
                         sorted = false;
                     }
                     if (mode != "Bubble") {
@@ -265,6 +284,9 @@
                     break;
                 }
             }
+            lastMode = mode;
+            mode = "None";
+            active = -1;
         }
 
         async function merge(start, end) {
@@ -307,6 +329,7 @@
             }
             index = start
             while (index < end + 1) {
+                active = index;
                 if (mode != "Merge") {
                     break;
                 }
@@ -337,11 +360,15 @@
                     await merge(start, end);
                     reset(arr.length, arr);
                 }
+                lastMode = mode;
+                mode = "None";
+                active = -1;
             }
         }
 
         async function knowSort() {
             for (let i = 0; i < arr.length; i++) {
+                active = i;
                 while (arr[i] != i + 1) {
                     if (mode != "Know") {
                         break;
@@ -353,6 +380,9 @@
                     break;
                 }
             }
+            lastMode = mode;
+            mode = "None";
+            active = -1;
         }
 
         async function knowSort2() {
@@ -363,6 +393,7 @@
                 }
       	        sorted = true;
       	        for (let i = 0; i < arr.length; i++) {
+                    active = i;
                     if (mode != "Know2") {
                         break;
                     }
@@ -373,6 +404,9 @@
                     reset(arr.length, arr);
       	        }
             }
+            lastMode = mode;
+            mode = "None";
+            active = -1;
         }
 
         function sleep(ms) {
