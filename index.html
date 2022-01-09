@@ -1,55 +1,306 @@
 <!DOCTYPE html>
 <html>
-<H1>
-    Login
-</H1>
-<h2></h2>
 <body>
-    <div id="mail">
-        email <input type="email" id="email">
-    </div>
-    <div id="pass">
-        password <input type="password" id="password">
-    </div>
-    <div id="check">
-        I am human<input type="checkbox" id="checkbox">
-    </div>
-    <div id="click">
-        <input type="button" value="Submit" id="button" onclick="validate()">
-    </div>
+    <button id='Quick Sort'>Quick Sort</button>
+    <button id='Bubble Sort'>Bubble Sort</button>
+    <button id='Merge Sort'>Merge Sort</button>
+    <button id='Know Sort'>Know Sort</button>
+    <button id='Know Sort 2'>Know Sort 2</button>
 
+    <div></div>
+    Array: <span id="arr"></span>
+    <canvas id="myCanvas" width="1400" height="650" style="border:1px solid #2a1baf;"></canvas>
+
+    <input type="range" min="4" max="2000" value="1" class="slider" id="slider">
+    Amount of Rectangles: <span id="choice"></span>
+    <br>
+    <input type="range" min="1" max = "5" value="1" class="slideSpeed" id="slideSpeed">
+    Speed: <span id="speed"></span>
+    <div></div>
+    <br>
+    <button id='New'>Generate New Array</button>
     <script>
-        function validate() {
-            var email = document.getElementById("email").value;
-            var password = document.getElementById("password").value;
-            if (typeof dic === 'undefined') {
-                dic = {};
+        let mode = "None";
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        var slider = document.getElementById("slider");
+        var slideSpeed = document.getElementById("slideSpeed");
+        var slideText = document.getElementById("choice");
+        var speedText = document.getElementById("speed");
+        var arrText = document.getElementById("arr");
+        var size = 4;
+        var speed = 1;
+        slideText.innerHTML = size;
+        speedText.innerHTML = speed;
+        var arr = reset(size ,[]);
+        var visited = [];
+        var iterated = [];
+        var buttonGen = document.getElementById('New');
+        arrText.innerHTML = arr;
+        var buttonQuick = document.getElementById('Quick Sort');
+        var buttonBubble = document.getElementById('Bubble Sort');
+        var buttonMerge = document.getElementById('Merge Sort');
+        var buttonKnow = document.getElementById('Know Sort');
+        var buttonKnow2 = document.getElementById('Know Sort 2');
+        buttonGen.onclick = function() {
+            mode = "None";
+            arr = reset(arr.length);
+        }
+        buttonQuick.onclick = function() {
+            mode = "Quick";
+            quicksort();
+        }
+        buttonBubble.onclick = function() {
+            mode = "Bubble";
+            bubblesort();
+        }
+        buttonMerge.onclick = function() {
+            mode = "Merge";
+            visited = [];
+            iterated = [];
+            for (let i = 0; i < arr.length; i++) {
+                iterated.push(0);
+                visited.push(0);
             }
-            var good = true;
-            if (document.getElementById("checkbox").checked == false) {
-                good = false;
-                alert("checkbox not checked");
-            }
-            if (good) {
-                var found = false;
-                for (const [key] of Object.entries(dic)) {
-                    if (key == email) {
-                        found = true;
-                    }
+            mergesort(0, arr.length - 1);
+        }
+        buttonKnow.onclick = function() {
+            mode = "Know";
+            knowSort();
+        }
+        buttonKnow2.onclick = function() {
+            mode = "Know2";
+            knowSort2();
+        }
+        slider.oninput = function() {
+            mode = "None";
+            slideText.innerHTML = this.value;
+            size = this.value;
+            ctx.clearRect(0, 0, c.width, c.height);
+            arr = reset(size);
+            arrText.innerHTML = arr;
+        }
+        slideSpeed.oninput = function() {
+            mode = "None";
+            speedText.innerHTML = this.value;
+            speed = this.value;
+        }
+        function reset(size, ar = []) {
+            nums = [];
+            slide = false;
+            if (ar == "") {
+                for (let i = 1; i <= size; i++) {
+                    nums.push(i);
+                    slide = true;
                 }
-                if (found == false) {
-                    good = false;
-                    alert("email not found");
+                while (nums.length > 0) {
+                    const random = Math.floor(Math.random() * nums.length);
+                    ar.push(nums[random]);
+                    nums.splice(random, 1);
                 }
             }
-            if (good && dic[email] != password) {
-                good = false;
-                alert("incorrect password");
+            ctx.clearRect(0, 0, c.width, c.height);
+            for (let i = 0; i < size; i++) {
+                ctx.fillStyle = 'black';
+                if (i == ar[i] - 1) {
+                    ctx.fillStyle = 'green';
+                }
+                ctx.fillRect(i * (1400 / size), 0, 1400 / size, 600 / (size) * ar[i]);
             }
-            if (good) {
-                alert("you're in mate");
+            arrText.innerHTML = ar;
+            return ar;
+        }
+        async function bin_search(arr, val, start, end) {
+            if (speed == 1) {
+                await sleep(500);
+            }
+            else if (speed == 2) {
+                await sleep(100);
+            }
+            else if (speed == 3) {
+                await sleep(20);
+            }
+            else if (speed == 4) {
+                await sleep();
+            }
+            if (start == end) {
+                if (arr[start] > val) {
+                    return start;
+                }
+                else {
+                    return start + 1;
+                }
+            }
+            if (start > end) {
+                return start;
+            }
+            var mid = Math.floor((start + end) / 2);
+            if (arr[mid] < val) {
+                return bin_search(arr, val, mid + 1, end);
+            }
+            else if (arr[mid] > val) {
+                return bin_search(arr, val, start, mid - 1);
+            }
+            else {
+                return mid;
             }
         }
+        async function quicksort() {
+            let i = 0;
+            while (i < arr.length) {
+                let val = arr[i];
+                let j = await bin_search(arr, val, 0, i - 1);
+                let slice2 = arr.slice(j, i);
+                let slice3 = arr.slice(i + 1);
+                arr = arr.slice(0, j);
+                arr.push(val);
+                arr = arr.concat(slice2);
+                arr = arr.concat(slice3);
+                reset(arr.length, arr);
+                arrText.innerHTML = arr;
+                i++;
+            }
+        }
+        async function swap(a, b) {
+            if (speed == 1) {
+                await sleep(500);
+            }
+            else if (speed == 2) {
+                await sleep(100);
+            }
+            else if (speed == 3) {
+                await sleep(50);
+            }
+            else if (speed == 4) {
+                await sleep(10);
+            }
+            else {
+                await sleep();
+            }
+            temp1 = arr[a];
+            arr[a] = arr[b];
+            arr[b] = temp1;
+        }
+        async function swapKnow(a, b) {
+            if (speed == 1) {
+                await sleep(500);
+            }
+            else if (speed == 2) {
+                await sleep(100);
+            }
+            else if (speed == 3) {
+                await sleep(30);
+            }
+            else if (speed == 4) {
+                await sleep();
+            }
+            temp1 = arr[a];
+            arr[a] = arr[b];
+            arr[b] = temp1;
+        }
+        async function bubblesort() {
+            for (let i = 0; i < arr.length; i++) {
+                sorted = true;
+                for (let j = 0; j < arr.length - i - 1; j++) {
+                    if (arr[j] > arr[j + 1]) {
+                        await swap(j, j + 1);
+                        reset(arr.length, arr);
+                        arrText.innerHTML = arr;
+                        sorted = false;
+                    }
+                }
+                if (sorted) {
+                    break;
+                }
+            }
+        }
+
+        async function merge(start, end) {
+            let mid = Math.floor((start + end) / 2);
+            let startOne = start;
+            let startTwo = mid + 1;
+            let endOne = mid;
+            let endTwo = end;
+            let index = start;
+            while (startOne <= endOne && startTwo <= endTwo) {
+                if (arr[startOne] <= arr[startTwo]) {
+                    iterated[index] = arr[startOne];
+                    index++;
+                    startOne++;
+                }
+                else if(arr[startOne] > arr[startTwo]) {
+                    iterated[index] = arr[startTwo];
+                    index++;
+                    startTwo++;
+                }
+            }
+            while (startOne <= endOne) {
+                iterated[index] = arr[startOne]
+                index++;
+                startOne++;
+            }
+            while (startTwo <= endTwo) {
+                iterated[index] = arr[startTwo];
+                index++;
+                startTwo++;
+            }
+            index = start
+            while (index < end + 1) {
+                arr[index] = iterated[index];
+                if (speed == 1) {
+                    await sleep(200);
+                }
+                else if (speed == 2) {
+                    await sleep(50);
+                }
+                else if (speed == 3) {
+                    await sleep(10);
+                }
+                else {
+                    await sleep();
+                }
+                reset(arr.length, arr);
+                index++;
+            }
+        }
+        
+        async function mergesort(start, end) {
+            if (start < end) {
+                let mid = Math.floor((start + end) / 2);
+                await mergesort(start, mid);
+                await mergesort(mid + 1, end);
+                await merge(start, end);
+                reset(arr.length, arr);
+            }
+        }
+
+        async function knowSort() {
+            for (let i = 0; i < arr.length; i++) {
+                while (arr[i] != i + 1) {
+                    await swapKnow(i, arr[i] - 1);
+                    reset(arr.length, arr);
+                }
+            }
+        }
+
+        async function knowSort2() {
+            sorted = false;
+  	        while (!sorted) {
+      	        sorted = true;
+      	        for (let i = 0; i < arr.length; i++) {
+        	        if (arr[arr[i] - 1] > arr[i]) {
+              	        sorted = false;
+                    }
+        	        await swapKnow(i, arr[i] - 1);
+                    reset(arr.length, arr);
+      	        }
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
     </script>
 </body>
 </html>
