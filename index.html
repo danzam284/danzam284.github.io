@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <button id='Quick Sort' style="margin-left: 75px; margin-right:100px;">Insertion Sort</button>
+    <button id='Quick Sort' style="margin-left: 75px; margin-right:100px;">Quick Sort</button>
     <button id='Selection Sort' style="margin-right:100px;">Selection Sort</button>
     <button id='Bubble Sort' style="margin-right:100px;">Bubble Sort</button>
     <button id='Merge Sort' style="margin-right:100px;">Merge Sort</button>
+    <button id='Cocktail Sort' style="margin-right:100px;">Cocktail Sort</button>
     <button id='Know Sort' style="margin-right:100px;">Know Sort</button>
     <button id='Know Sort 2' style="margin-right:100px;">Know Sort 2</button>
     <button id='Cool Sort' style="margin-right:100px;">Cool Sort</button>
@@ -48,6 +49,7 @@
         var buttonQuick = document.getElementById('Quick Sort');
         var buttonBubble = document.getElementById('Bubble Sort');
         var buttonMerge = document.getElementById('Merge Sort');
+        var buttonCocktail = document.getElementById('Cocktail Sort');
         var buttonKnow = document.getElementById('Know Sort');
         var buttonKnow2 = document.getElementById('Know Sort 2');
         var buttonCool = document.getElementById('Cool Sort');
@@ -143,6 +145,14 @@
                     visited.push(0);
                 }
                 mergesort(0, arr.length - 1);
+            }
+        }
+        buttonCocktail.onclick = function() {
+            minIndex = -1;
+            if (mode != "Cocktail") {
+                lastMode = mode;
+                mode = "Cocktail";
+                cocktailsort();
             }
         }
         buttonKnow.onclick = function() {
@@ -434,6 +444,52 @@
             }
         }
 
+        async function cocktailsort() {
+            let recurse = 0;
+            while (!isSorted()) {
+                if (mode != "Cocktail") {
+                    break;
+                }
+                if (recurse % 2 == 0) {
+                    for (let i = 0; i < arr.length - 1; i++) {
+                        if (mode != "Cocktail") {
+                            break;
+                        }
+                        reset(arr.length, arr);
+                        active = i
+                        if (arr[i] > arr[i + 1]) {
+                            await swap(i, i + 1);
+                        }
+                    }
+                }
+                else {
+                    for (let i = arr.length - 1; i > 0; i--) {
+                        if (mode != "Cocktail") {
+                            break;
+                        }
+                        reset(arr.length, arr);
+                        active = i
+                        if (arr[i] < arr[i - 1]) {
+                            await swap(i, i - 1);
+                        }
+                    }
+                }
+                recurse++;
+            }
+            lastMode = mode;
+            mode = "None";
+            active = -1;
+        }
+
+        function isSorted() {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] != i + 1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         async function knowSort() {
             for (let i = 0; i < arr.length; i++) {
                 active = i;
@@ -497,7 +553,6 @@
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
-
     </script>
 </body>
 </html>
