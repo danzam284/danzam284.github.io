@@ -6,6 +6,7 @@
     <button id='Merge Sort'>Merge Sort</button>
     <button id='Know Sort'>Know Sort</button>
     <button id='Know Sort 2'>Know Sort 2</button>
+    <button id='Cool Sort'>Cool Sort</button>
 
     <div></div>
     Array: <span id="arr"></span>
@@ -33,6 +34,7 @@
         var slideText = document.getElementById("choice");
         var speedText = document.getElementById("speed");
         var arrText = document.getElementById("arr");
+        var await = 0;
         var size = 4;
         var speed = 1;
         slideText.innerHTML = size;
@@ -49,14 +51,19 @@
         var buttonMerge = document.getElementById('Merge Sort');
         var buttonKnow = document.getElementById('Know Sort');
         var buttonKnow2 = document.getElementById('Know Sort 2');
+        var buttonCool = document.getElementById('Cool Sort');
+
         buttonGen.onclick = function() {
             lastMode = mode;
             mode = "None";
             arr = reset(arr.length);
         }
         buttonStop.onclick = function() {
+            if (mode == "Cool") {
+                await = 1;
+            }
             lastMode = mode;
-            mode = "None";        
+            mode = "None";      
         }
         buttonResume.onclick = function() {
             mode = lastMode;
@@ -80,6 +87,11 @@
             }
             else if (mode == "Know2") {
                 knowSort2();
+            }
+            else if (await == 1) {
+                await = 0;
+                mode = "Cool";
+                coolSort();
             }
         }
         buttonQuick.onclick = function() {
@@ -121,6 +133,13 @@
                 lastMode = mode;
                 mode = "Know2";
                 knowSort2();
+            }
+        }
+        buttonCool.onclick = function() {
+            if (mode != "Cool") {
+                lastMode = mode;
+                mode = "Cool";
+                coolSort();
             }
         }
         slider.oninput = function() {
@@ -403,6 +422,23 @@
         	        await swapKnow(i, arr[i] - 1);
                     reset(arr.length, arr);
       	        }
+            }
+            lastMode = mode;
+            mode = "None";
+            active = -1;
+        }
+        async function coolSort() {
+            for (let i = 0, j = arr.length - 1; i < j; i++) {
+                if (mode != "Cool") {
+                    break;
+                }
+                await swapKnow(i, arr.indexOf(i + 1));
+                active = i;
+                reset(arr.length, arr);
+                await swapKnow(j, arr.indexOf(j + 1));
+                active = j;
+                reset(arr.length, arr);
+                j--;
             }
             lastMode = mode;
             mode = "None";
