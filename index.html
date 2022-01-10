@@ -373,6 +373,9 @@
         }
 
         async function bogosort() {
+            let originalSize = arr.length;
+            let i = arr.length - 1;
+            let addOn = [];
             while (!isSorted()) {
                 if (mode != "Bogo") {
                     break;
@@ -392,7 +395,13 @@
                 else {
                     await sleep();
                 }
-                arr = reset(arr.length);
+                if (arr[i] - 1 == i) {
+                    newArr = [i + 1];
+                    addOn = newArr.concat(addOn);
+                    i--;
+                }
+                arr = reset(arr.length - (arr.length - 1 - i)).concat(addOn);
+                reset(arr.length, arr);
             }
         }
 
