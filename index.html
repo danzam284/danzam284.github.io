@@ -2,13 +2,14 @@
 <html>
 <body style="background-color: black; color: white;">
     <button id='Quick Sort'>Quick Sort</button>
+    <button id='Gravity Sort'>Gravity Sort</button>
     <button id='Selection Sort'>Selection Sort</button>
     <button id='Bubble Sort'>Bubble Sort</button>
     <button id='Merge Sort'>Merge Sort</button>
     <button id='Shell Sort'>Shell Sort</button>
     <button id='Cocktail Sort'>Cocktail Sort</button>
     <button id='Gnome Sort'>Insertion Sort</button>
-    <button id='Bogo Sort' style="margin-right:200px;">Bogo Sort</button>
+    <button id='Bogo Sort' style="margin-right:120px;">Bogo Sort</button>
     Made Up Sorting Algorithms -->
     <button id='Know Sort'>Know Sort</button>
     <button id='Know Sort 2'>Know Sort 2</button>
@@ -122,6 +123,7 @@
         var buttonStop = document.getElementById('Stop');
         var buttonQuick = document.getElementById('Quick Sort');
         var buttonBubble = document.getElementById('Bubble Sort');
+        var buttonGravity = document.getElementById('Gravity Sort');
         var buttonMerge = document.getElementById('Merge Sort');
         var buttonShell = document.getElementById('Shell Sort');
         var buttonCocktail = document.getElementById('Cocktail Sort');
@@ -134,7 +136,9 @@
         var buttonRandom = document.getElementById('neon-button');
 
         function randomize() {
-            rand = Math.floor(Math.random() * 11);
+            mode = "None";
+            arr = reset(arr.length);
+            rand = Math.floor(Math.random() * 12);
             if (rand == 0) {
                 buttonQuick.click();
             }
@@ -167,6 +171,9 @@
             }
             else if (rand == 10) {
                 buttonCool.click();
+            }
+            else if (rand == 11) {
+                buttonGravity.click();
             }
         }
 
@@ -263,6 +270,14 @@
                 lastMode = mode;
                 mode = "Bubble";
                 bubblesort();
+            }
+        }
+        buttonGravity.onclick = function() {
+            minIndex = -1;
+            if (mode != "Gravity") {
+                lastMode = mode;
+                mode = "Gravity";
+                gravitysort();
             }
         }
         buttonSelection.onclick = function() {
@@ -379,6 +394,82 @@
                 }
                 arr = reset(arr.length);
             }
+        }
+
+        async function gravitysort() {
+            max = Math.max.apply(Array, arr);
+            beads = [];
+            for (let i = 0; i < max; i++) {
+                beads[i] = []
+                for (let j = max; j > arr[i]; j--) {
+                    beads[i].push(0);
+                }
+                while (beads[i].length < max) {
+                    beads[i].push(1);
+                }
+            }
+            for (let i = 0; i < beads.length; i++) {
+                if (mode != "Gravity") {
+                    break;
+                }
+                let grav = false;
+                while (!grav) {
+                    if (mode != "Gravity") {
+                        break;
+                    }
+                    for (let j = 0; j < max - 1; j++) {
+                        if (mode != "Gravity") {
+                            break;
+                        }
+                        if (beads[j][i] == 1) {
+                            if (beads[j + 1][i] == 0) {
+                                active = j;
+                                beads[j][i] = 0;
+                                beads[j + 1][i] = 1;
+                            }
+                        }
+                    }
+                    grav = true;
+                    let one = false;
+                    for (let j = 0; j < max - 1; j++) {
+                        if (mode != "Gravity") {
+                            break;
+                        }
+                        if (beads[j][i] == 1) {
+                            one = true;
+                        }
+                        else {
+                            if (one) {
+                                grav = false;
+                            }
+                        }
+                    }
+                }
+                await grav_helper();
+            }
+            await grav_helper();
+        }
+
+        async function grav_helper() {
+            if (speed == 1) {
+                await sleep(500);
+            }
+            else if (speed == 2) {
+                await sleep(100);
+            }
+            else if (speed == 3) {
+                await sleep(20);
+            }
+            else if (speed == 4) {
+                await sleep();
+            }
+            for (let i = 0; i < arr.length; i++) {
+                arr[i] = 0;
+                for (let j = 0; j < arr.length; j++) {
+                    arr[i] += beads[i][j];
+                }
+            }
+            reset(arr.length, arr);
         }
 
         async function shellsort() {
