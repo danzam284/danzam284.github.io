@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<body>
+<body style="background-color: black; color: white;">
     <button id='Quick Sort'>Quick Sort</button>
     <button id='Selection Sort'>Selection Sort</button>
     <button id='Bubble Sort'>Bubble Sort</button>
@@ -8,7 +8,9 @@
     <button id='Shell Sort'>Shell Sort</button>
     <button id='Cocktail Sort'>Cocktail Sort</button>
     <button id='Gnome Sort'>Insertion Sort</button>
-    <button id='Know Sort' style="margin-left:300px;">Know Sort</button>
+    <button id='Bogo Sort' style="margin-right:200px;">Bogo Sort</button>
+    Made Up Sorting Algorithms -->
+    <button id='Know Sort'>Know Sort</button>
     <button id='Know Sort 2'>Know Sort 2</button>
     <button id='Cool Sort'>Cool Sort</button>
     <br>
@@ -17,16 +19,83 @@
     <canvas id="myCanvas" width="1400" height="650" style="border:1px solid #2a1baf;"></canvas>
 
     <input type="range" min="4" max="2000" value="1" class="slider" id="slider">
-    Amount of Rectangles: <span id="choice"></span>
+    Length of Array: <span id="choice"></span>
     <input id="Rectangles Type" type="text" style="margin-left:200px;">
     <br>
     <input type="range" min="1" max = "5" value="1" class="slideSpeed" id="slideSpeed">
     Speed: <span id="speed"></span>
+    <span style="color:purple; margin-left:500px;">Correct Spot</span>
+    <span style="color:white; margin-left:10px;">Incorrect Spot</span>
+    <span style="color:red; margin-left:10px;">Smallest (Selection)</span>
+    <span style="color:blue; margin-left:10px;">Current</span>
+    <a href="#" class="neon-button" onclick="randomize();">Random</a>
     <div></div>
     <br>
     <button id='New'>Generate New Array</button>
     <button id="Stop">Pause</button>
+    <style>
+        :root {
+        --clr-neon: hsl(317 100% 54%);
+        --clr-bg: hsl(323 21% 16%);
+        }
+        .neon-button {
+        margin-left: 80px;
+        margin-bottom: 100px;
+        font-size: 2rem;
+        color: var(--clr-neon);
+        display: infinite-block;
+        text-decoration: none;
+        border: var(--clr-neon) 0.125em solid;
+        padding: .25em 1em;
+        border-radius: 0.25em;
+        text-shadow: 
+            0 0 0.125em white, 0 0 0.2em currentColor; 
+        box-shadow: 0 0 1em currentColor, inset 0 0 1em currentColor;
+        position: relative;
+        }
+        .neon-button::before {
+        pointer-events: none;
+        content: "";
+        position: absolute;
+        background: var(--clr-neon);
+        top: 120%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: perspective(1em) rotateX(40deg) scale(1, 0.35);
+        filter: blur(1em);
+        opacity: 0.9;
+        }
 
+        .neon-button::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        box-shadow: 0 0 3em 0.5em blue;
+        opacity: 0;
+        background-color: blue;
+        z-index: -1;
+        transition: opacity 100ms linear;
+        }
+
+        .neon-button:hover,
+        .neon-button:focus {
+        color: blue;
+        text-shadow: blue;
+        }
+
+        .neon-button:hover::before,
+        .neon-button:focus::before {
+        opacity: 1;
+        }
+        .neon-button:hover::after,
+        .neon-button:focus::after {
+        opacity: 1;
+        }
+    </style>
     <script>
         var mode = "None";
         var lastMode = "None";
@@ -60,7 +129,46 @@
         var buttonKnow = document.getElementById('Know Sort');
         var buttonKnow2 = document.getElementById('Know Sort 2');
         var buttonCool = document.getElementById('Cool Sort');
+        var buttonBogo = document.getElementById('Bogo Sort');
         var buttonSelection = document.getElementById('Selection Sort');
+        var buttonRandom = document.getElementById('neon-button');
+
+        function randomize() {
+            rand = Math.floor(Math.random() * 11);
+            if (rand == 0) {
+                buttonQuick.click();
+            }
+            else if (rand == 1) {
+                buttonSelection.click();
+            }
+            else if (rand == 2) {
+                buttonBubble.click();
+            }
+            else if (rand == 3) {
+                buttonMerge.click();
+            }
+            else if (rand == 4) {
+                buttonShell.click();
+            }
+            else if (rand == 5) {
+                buttonCocktail.click();
+            }
+            else if (rand == 6) {
+                buttonGnome.click();
+            }
+            else if (rand == 7) {
+                buttonBogo.click();
+            }
+            else if (rand == 8) {
+                buttonKnow.click();
+            }
+            else if (rand == 9) {
+                buttonKnow2.click();
+            }
+            else if (rand == 10) {
+                buttonCool.click();
+            }
+        }
 
         rectangleButton.onclick = function() {
             if (rectangleButton.value == "Enter Desired Length") {
@@ -102,6 +210,7 @@
             lastMode = mode;
             mode = "None";      
         }
+
         /*
         buttonResume.onclick = function() {
             if (lastMode != "None") {
@@ -162,6 +271,14 @@
                 lastMode = mode;
                 mode = "Select";
                 selectionsort();
+            }
+        }
+        buttonBogo.onclick = function() {
+            minIndex = -1;
+            if (mode != "Bogo") {
+                lastMode = mode;
+                mode = "Bogo";
+                bogosort();
             }
         }
         buttonMerge.onclick = function() {
@@ -240,6 +357,30 @@
             speed = this.value;
         }
 
+        async function bogosort() {
+            while (!isSorted()) {
+                if (mode != "Bogo") {
+                    break;
+                }
+                if (speed == 1) {
+                    await sleep(300);
+                }
+                else if (speed == 2) {
+                    await sleep(100);
+                }
+                else if (speed == 3) {
+                    await sleep(20);
+                }
+                else if (speed == 4) {
+                    await sleep(5);
+                }
+                else {
+                    await sleep();
+                }
+                arr = reset(arr.length);
+            }
+        }
+
         async function shellsort() {
             for (let i = Math.floor(arr.length / 2); i > 0; i = Math.floor(i / 2)) {
                 if (mode != "Shell") {
@@ -295,7 +436,7 @@
 
             ctx.clearRect(0, 0, c.width, c.height);
             for (let i = 0; i < size; i++) {
-                ctx.fillStyle = 'black';
+                ctx.fillStyle = 'white';
                 if (i == active) {
                     ctx.fillStyle = 'blue';
                 }
@@ -303,7 +444,7 @@
                     ctx.fillStyle = 'red';
                 }
                 else if (i == ar[i] - 1) {
-                    ctx.fillStyle = 'green';
+                    ctx.fillStyle = 'purple';
                 }
                 ctx.fillRect(i * (1400 / size), 0, 1400 / size, 600 / (size) * ar[i]);
             }
