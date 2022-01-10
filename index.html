@@ -18,6 +18,7 @@
 
     <input type="range" min="4" max="2000" value="1" class="slider" id="slider">
     Amount of Rectangles: <span id="choice"></span>
+    <input id="Rectangles Type" type="text" style="margin-left:200px;">
     <br>
     <input type="range" min="1" max = "5" value="1" class="slideSpeed" id="slideSpeed">
     Speed: <span id="speed"></span>
@@ -36,6 +37,8 @@
         var slideSpeed = document.getElementById("slideSpeed");
         var slideText = document.getElementById("choice");
         var speedText = document.getElementById("speed");
+        var rectangleButton = document.getElementById("Rectangles Type");
+        rectangleButton.value = "Enter Desired Length";
         var await = 0;
         var await2 = 0;
         var size = 4;
@@ -59,6 +62,30 @@
         var buttonCool = document.getElementById('Cool Sort');
         var buttonSelection = document.getElementById('Selection Sort');
 
+        rectangleButton.onclick = function() {
+            if (rectangleButton.value == "Enter Desired Length") {
+                rectangleButton.value = "";
+            }
+        }
+        document.body.onmousedown = function() {
+            if (rectangleButton.value == "") {
+                rectangleButton.value = "Enter Desired Length";
+            }
+        }
+        rectangleButton.addEventListener("keyup", function() {
+            if (/^-?\d+$/.test(rectangleButton.value)) {
+                num = rectangleButton.value;
+                if (+num >= 4 && +num <= 2000) {
+                    minIndex = -1;
+                    lastIndex = -1;
+                    mode = "None";
+                    arr = reset(+num);
+                    size = num;
+                    slider.value = num;
+                    slideText.innerHTML = num;
+                }
+            }
+        }, false);
         buttonGen.onclick = function() {
             minIndex = -1;
             lastMode = mode;
@@ -250,6 +277,7 @@
                 }
             }
         }
+
         function reset(size, ar = []) {
             nums = [];
             slide = false;
@@ -264,6 +292,7 @@
                     nums.splice(random, 1);
                 }
             }
+
             ctx.clearRect(0, 0, c.width, c.height);
             for (let i = 0; i < size; i++) {
                 ctx.fillStyle = 'black';
@@ -543,9 +572,18 @@
 
         async function gnomesort() {
             for (var i = 0; i < arr.length; i++) {
+                if (mode != "Gnome") {
+                    break;
+                }
                 for (var j = i; j > 0; j--) {
+                    if (mode != "Gnome") {
+                        break;
+                    }
                     active = j;
                     if (arr[j] < arr[j - 1]) {
+                        if (mode != "Gnome") {
+                            break;
+                        }
                         await swap(j, j - 1);
                         reset(arr.length, arr);
                     }
