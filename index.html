@@ -393,7 +393,7 @@
                     await sleep(5);
                 }
                 else {
-                    await sleep();
+                    await sleep(1);
                 }
                 if (arr[i] - 1 == i) {
                     newArr = [i + 1];
@@ -470,7 +470,10 @@
                 await sleep(20);
             }
             else if (speed == 4) {
-                await sleep();
+                await sleep(5);
+            }
+            else {
+                await sleep(1);
             }
             for (let i = 0; i < arr.length; i++) {
                 arr[i] = 0;
@@ -508,7 +511,10 @@
                             await sleep(20);
                         }
                         else if (speed == 4) {
-                            await sleep();
+                            await sleep(5);
+                        }
+                        else {
+                            await sleep(1);
                         }
                         arr[k] = arr[k - i];
                         reset(arr.length, arr);
@@ -564,7 +570,10 @@
                     await sleep(20);
                 }
                 else if (speed == 4) {
-                    await sleep();
+                    await sleep(5);
+                }
+                else {
+                    await sleep(1);
                 }
                 if (start == end) {
                     if (arr[start] > val) {
@@ -625,7 +634,7 @@
                 await sleep(10);
             }
             else {
-                await sleep();
+                await sleep(1);
             }
             temp1 = arr[a];
             arr[a] = arr[b];
@@ -642,7 +651,10 @@
                 await sleep(30);
             }
             else if (speed == 4) {
-                await sleep();
+                await sleep(5);
+            }
+            else {
+                await sleep(1);
             }
             temp1 = arr[a];
             arr[a] = arr[b];
@@ -754,8 +766,11 @@
                 else if (speed == 3) {
                     await sleep(10);
                 }
+                else if (speed == 4) {
+                    await sleep(5);
+                }
                 else {
-                    await sleep();
+                    await sleep(1);
                 }
                 reset(arr.length, arr);
                 index++;
