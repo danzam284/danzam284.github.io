@@ -1,102 +1,43 @@
 <!DOCTYPE html>
 <html>
-<body style="background-color: black; color: white;">
-    <button id='Quick Sort'>Quick Sort</button>
-    <button id='Gravity Sort'>Gravity Sort</button>
-    <button id='Selection Sort'>Selection Sort</button>
-    <button id='Bubble Sort'>Bubble Sort</button>
-    <button id='Merge Sort'>Merge Sort</button>
-    <button id='Shell Sort'>Shell Sort</button>
-    <button id='Cocktail Sort'>Cocktail Sort</button>
-    <button id='Gnome Sort'>Insertion Sort</button>
-    <button id='Bogo Sort' style="margin-right:120px;">Bogo Sort</button>
-    Made Up Sorting Algorithms -->
-    <button id='Know Sort'>Know Sort</button>
-    <button id='Know Sort 2'>Know Sort 2</button>
-    <button id='Cool Sort'>Cool Sort</button>
-    <br>
-    <br>
-    <div></div>
-    <canvas id="myCanvas" width="1400" height="650" style="border:1px solid #2a1baf;"></canvas>
+    <header>
+        <head>
+            <link rel="stylesheet" href="sort.css">
+        </head>
+        <h1>Sorting Visualizer</h1>
+        <select name="Sorting Method" id="Sorting Method" class="dropdown">
+            <option value='Quick Sort'>Quick Sort</option>
+            <option value='Gravity Sort'>Gravity Sort</option>
+            <option value='Selection Sort'>Selection Sort</option>
+            <option value='Bubble Sort'>Bubble Sort</option>
+            <option value='Merge Sort'>Merge Sort</option>
+            <option value='Shell Sort'>Shell Sort</option>
+            <option value='Cocktail Sort'>Cocktail Sort</option>
+            <option value='Gnome Sort'>Insertion Sort</option>
+            <option value='Bogo Sort'>Bogo Sort</option>
+            <option value='Know Sort'>Know Sort (Made Up)</option>
+            <option value='Know Sort 2'>Know Sort 2 (Made Up)</option>
+            <option value='Cool Sort'>Cool Sort (Made Up)</option>
+            <option value='Random'>Random Sorting Method</option>
+        </select>
 
-    <input type="range" min="4" max="2000" value="1" class="slider" id="slider">
-    Length of Array: <span id="choice"></span>
-    <input id="Rectangles Type" type="text" style="margin-left:200px;">
-    <br>
-    <input type="range" min="1" max = "5" value="1" class="slideSpeed" id="slideSpeed">
-    Speed: <span id="speed"></span>
-    <span style="color:purple; margin-left:500px;">Correct Spot</span>
-    <span style="color:white; margin-left:10px;">Incorrect Spot</span>
-    <span style="color:red; margin-left:10px;">Smallest (Selection)</span>
-    <span style="color:blue; margin-left:10px;">Current</span>
-    <a href="#" class="neon-button" onclick="randomize();">Random</a>
-    <div></div>
-    <br>
-    <button id='New'>Generate New Array</button>
-    <button id="Stop">Pause</button>
-    <style>
-        :root {
-        --clr-neon: hsl(317 100% 54%);
-        --clr-bg: hsl(323 21% 16%);
-        }
-        .neon-button {
-        margin-left: 80px;
-        margin-bottom: 100px;
-        font-size: 2rem;
-        color: var(--clr-neon);
-        display: infinite-block;
-        text-decoration: none;
-        border: var(--clr-neon) 0.125em solid;
-        padding: .25em 1em;
-        border-radius: 0.25em;
-        text-shadow: 
-            0 0 0.125em white, 0 0 0.2em currentColor; 
-        box-shadow: 0 0 1em currentColor, inset 0 0 1em currentColor;
-        position: relative;
-        }
-        .neon-button::before {
-        pointer-events: none;
-        content: "";
-        position: absolute;
-        background: var(--clr-neon);
-        top: 120%;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        transform: perspective(1em) rotateX(40deg) scale(1, 0.35);
-        filter: blur(1em);
-        opacity: 0.9;
-        }
+        <button id="Sort" class="sort" onclick="this.blur();">Sort Array</button>
+        <button id='New' class="new">Generate New Array</button>
+        <button id="Stop" class="stop">Pause</button>
 
-        .neon-button::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        box-shadow: 0 0 3em 0.5em blue;
-        opacity: 0;
-        background-color: blue;
-        z-index: -1;
-        transition: opacity 100ms linear;
-        }
+        <input type="range" min="10" max="500" value="10" class="slider" id="slider">
+        <span>Length of Array: </span><span id="choice"></span>
+        <input type="range" min="1" max = "5" value="3" class="slideSpeed" id="slideSpeed">
+        <span>Speed: </span><span id="speed"></span>
+        <br>
+    </header>
+        <br>
+    <canvas id="myCanvas" width="1400" height="650"></canvas>
 
-        .neon-button:hover,
-        .neon-button:focus {
-        color: blue;
-        text-shadow: blue;
-        }
+    <div class="end">Daniel Zamloot - 2021</div>
 
-        .neon-button:hover::before,
-        .neon-button:focus::before {
-        opacity: 1;
-        }
-        .neon-button:hover::after,
-        .neon-button:focus::after {
-        opacity: 1;
-        }
-    </style>
+    <body>
+    
     <script>
         var mode = "None";
         var lastMode = "None";
@@ -107,100 +48,104 @@
         var slideSpeed = document.getElementById("slideSpeed");
         var slideText = document.getElementById("choice");
         var speedText = document.getElementById("speed");
-        var rectangleButton = document.getElementById("Rectangles Type");
-        rectangleButton.value = "Enter Desired Length";
         var await = 0;
         var await2 = 0;
-        var size = 4;
-        var speed = 1;
+        var size = 10;
+        var speed = 3;
         var minIndex = -1;
         slideText.innerHTML = size;
         speedText.innerHTML = speed;
         var arr = reset(size ,[]);
         var visited = [];
         var iterated = [];
+        var selector = document.getElementById('Sorting Method');
+        var buttonSort = document.getElementById('Sort');
         var buttonGen = document.getElementById('New');
         var buttonStop = document.getElementById('Stop');
-        var buttonQuick = document.getElementById('Quick Sort');
-        var buttonBubble = document.getElementById('Bubble Sort');
-        var buttonGravity = document.getElementById('Gravity Sort');
-        var buttonMerge = document.getElementById('Merge Sort');
-        var buttonShell = document.getElementById('Shell Sort');
-        var buttonCocktail = document.getElementById('Cocktail Sort');
-        var buttonGnome = document.getElementById('Gnome Sort');
-        var buttonKnow = document.getElementById('Know Sort');
-        var buttonKnow2 = document.getElementById('Know Sort 2');
-        var buttonCool = document.getElementById('Cool Sort');
-        var buttonBogo = document.getElementById('Bogo Sort');
-        var buttonSelection = document.getElementById('Selection Sort');
-        var buttonRandom = document.getElementById('neon-button');
 
         function randomize() {
             mode = "None";
             arr = reset(arr.length);
             rand = Math.floor(Math.random() * 12);
             if (rand == 0) {
-                buttonQuick.click();
+                buttonQuick();
             }
             else if (rand == 1) {
-                buttonSelection.click();
+                buttonSelection();
             }
             else if (rand == 2) {
-                buttonBubble.click();
+                buttonBubble();
             }
             else if (rand == 3) {
-                buttonMerge.click();
+                buttonMerge();
             }
             else if (rand == 4) {
-                buttonShell.click();
+                buttonShell();
             }
             else if (rand == 5) {
-                buttonCocktail.click();
+                buttonCocktail();
             }
             else if (rand == 6) {
-                buttonGnome.click();
+                buttonGnome();
             }
             else if (rand == 7) {
-                buttonBogo.click();
+                buttonBogo();
             }
             else if (rand == 8) {
-                buttonKnow.click();
+                buttonKnow();
             }
             else if (rand == 9) {
-                buttonKnow2.click();
+                buttonKnow2();
             }
             else if (rand == 10) {
-                buttonCool.click();
+                buttonCool();
             }
             else if (rand == 11) {
-                buttonGravity.click();
+                buttonGravity();
             }
         }
-
-        rectangleButton.onclick = function() {
-            if (rectangleButton.value == "Enter Desired Length") {
-                rectangleButton.value = "";
+        buttonSort.onclick = function() {
+            let method = selector.value;
+            if (method == 'Quick Sort') {
+                buttonQuick();
+            }
+            if (method == 'Gravity Sort') {
+                buttonGravity();
+            }
+            if (method == 'Selection Sort') {
+                buttonSelection();
+            }
+            if (method == 'Bubble Sort') {
+                buttonBubble();
+            }
+            if (method == 'Merge Sort') {
+                buttonMerge();
+            }
+            if (method == 'Shell Sort') {
+                buttonShell();
+            }
+            if (method == 'Cocktail Sort') {
+                buttonCocktail();
+            }
+            if (method == 'Gnome Sort') {
+                buttonGnome();
+            }
+            if (method == 'Bogo Sort') {
+                buttonBogo();
+            }
+            if (method == 'Know Sort') {
+                buttonKnow();
+            }
+            if (method == "Know Sort 2") {
+                buttonKnow2();
+            }
+            if (method == "Cool Sort") {
+                buttonCool();
+            }
+            if (method == "Random") {
+                randomize();
             }
         }
-        document.body.onmousedown = function() {
-            if (rectangleButton.value == "") {
-                rectangleButton.value = "Enter Desired Length";
-            }
-        }
-        rectangleButton.addEventListener("keyup", function() {
-            if (/^-?\d+$/.test(rectangleButton.value)) {
-                num = rectangleButton.value;
-                if (+num >= 4 && +num <= 2000) {
-                    minIndex = -1;
-                    lastIndex = -1;
-                    mode = "None";
-                    arr = reset(+num);
-                    size = num;
-                    slider.value = num;
-                    slideText.innerHTML = num;
-                }
-            }
-        }, false);
         buttonGen.onclick = function() {
             minIndex = -1;
             lastMode = mode;
@@ -215,7 +160,7 @@
                 await2 = 1;
             }
             lastMode = mode;
-            mode = "None";      
+            mode = "None";  
         }
 
         /*
@@ -256,7 +201,7 @@
             }
         }
         */
-        buttonQuick.onclick = function() {
+        function buttonQuick() {
             minIndex = -1;
             if (mode != "Quick") {
                 lastMode = mode;
@@ -264,7 +209,7 @@
                 quicksort();
             }
         }
-        buttonBubble.onclick = function() {
+        function buttonBubble() {
             minIndex = -1;
             if (mode != "Bubble") {
                 lastMode = mode;
@@ -272,7 +217,7 @@
                 bubblesort();
             }
         }
-        buttonGravity.onclick = function() {
+        function buttonGravity() {
             minIndex = -1;
             if (mode != "Gravity") {
                 lastMode = mode;
@@ -280,7 +225,7 @@
                 gravitysort();
             }
         }
-        buttonSelection.onclick = function() {
+        function buttonSelection() {
             minIndex = -1;
             if (mode != "Select") {
                 lastMode = mode;
@@ -288,7 +233,7 @@
                 selectionsort();
             }
         }
-        buttonBogo.onclick = function() {
+        function buttonBogo() {
             minIndex = -1;
             if (mode != "Bogo") {
                 lastMode = mode;
@@ -296,7 +241,7 @@
                 bogosort();
             }
         }
-        buttonMerge.onclick = function() {
+        function buttonMerge() {
             minIndex = -1;
             if (mode != "Merge") {
                 lastMode = mode;
@@ -310,7 +255,7 @@
                 mergesort(0, arr.length - 1);
             }
         }
-        buttonShell.onclick = function() {
+        function buttonShell() {
             minIndex = -1;
             if (mode != "Shell") {
                 lastMode = mode;
@@ -318,7 +263,7 @@
                 shellsort();
             }
         }
-        buttonCocktail.onclick = function() {
+        function buttonCocktail() {
             minIndex = -1;
             if (mode != "Cocktail") {
                 lastMode = mode;
@@ -326,7 +271,7 @@
                 cocktailsort();
             }
         }
-        buttonGnome.onclick = function() {
+        function buttonGnome() {
             minIndex = -1;
             if (mode != "Gnome") {
                 lastMode = mode;
@@ -334,7 +279,7 @@
                 gnomesort();
             }
         }
-        buttonKnow.onclick = function() {
+        function buttonKnow() {
             minIndex = -1;
             if (mode != "Know") {
                 lastMode = mode;
@@ -342,7 +287,7 @@
                 knowSort();
             }
         }
-        buttonKnow2.onclick = function() {
+        function buttonKnow2() {
             minIndex = -1;
             if (mode != "Know2") {
                 lastMode = mode;
@@ -350,7 +295,7 @@
                 knowSort2();
             }
         }
-        buttonCool.onclick = function() {
+        function buttonCool() {
             minIndex = -1;
             if (mode != "Cool") {
                 lastMode = mode;
@@ -514,7 +459,7 @@
                             await sleep(5);
                         }
                         else {
-                            await sleep(1);
+                            await sleep();
                         }
                         arr[k] = arr[k - i];
                         reset(arr.length, arr);
@@ -573,7 +518,7 @@
                     await sleep(5);
                 }
                 else {
-                    await sleep(1);
+                    await sleep();
                 }
                 if (start == end) {
                     if (arr[start] > val) {
