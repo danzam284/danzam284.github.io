@@ -9,6 +9,7 @@ span {
 
 header {
     background-color:rgb(50, 4, 61);
+    border-radius: 10px;
 }
 
 h1 {
